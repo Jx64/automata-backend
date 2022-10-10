@@ -1,21 +1,20 @@
-import json
 from flask import Flask, jsonify
+from flask_cors import CORS, cross_origin
 from automata.fa.nfa import NFA
-from AutomataDesign import Automata
+from automataDesign import Automata
 
 app = Flask(__name__)
+CORS(app)
 
-@app.route('/')
-def index():
-    return json.loads('{}'), 200
-
-@app.route('/validate/', methods=['GET'])
+@cross_origin
+@app.route('/validate/word=', methods=['GET'])
 def emptyWord():
     return jsonify({"word": "",
                     "valid": True,
                     "stepwise": []})
 
-@app.route('/validate/<string:word>', methods=["GET"])
+@cross_origin
+@app.route('/validate/word=<string:word>', methods=["GET"])
 def automataWord(word):
     nonDeterministicFiniteAutomata = NFA(
                                 states={'q0', 'q1', 'q2'},

@@ -1,5 +1,5 @@
-from ..generateAutomata import Automaton
-from ..stepwise import Stepwise
+from main.automata.generateAutomata import Automaton
+from main.datatypes.stepwise import Stepwise
 
 class Automata:
 

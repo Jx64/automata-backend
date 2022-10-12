@@ -1,7 +1,7 @@
 from main.automata.automataMethods import Automata
 from main.automata.generateAutomata import Automaton
-from main.types.rootObjectElement import RootObjectElement
-from main.types.stepwise import Stepwise
+from main.datatypes.rootObjectElement import RootObjectElement
+from main.datatypes.stepwise import Stepwise
 import re
 
 class Api:

@@ -1,5 +1,5 @@
 from typing import List
-from stepwise import Stepwise
+from ..stepwise import Stepwise
 
 
 class RootObjectElement:

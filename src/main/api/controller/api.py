@@ -1,10 +1,10 @@
 import re
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
-from rootObjectElement import RootObjectElement
-from stepwise import Stepwise
-from generateAutomata import Automaton
-from automataMethods import Automata
+from ..rootObjectElement import RootObjectElement
+from ..stepwise import Stepwise
+from ..generateAutomata import Automaton
+from ..automataMethods import Automata
 
 app = Flask(__name__)
 CORS(app)

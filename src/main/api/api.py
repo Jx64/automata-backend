@@ -1,7 +1,10 @@
+import re
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
-from automata.fa.nfa import NFA
-from automataDesign import Automata
+from rootObjectElement import RootObjectElement
+from stepwise import Stepwise
+from generateAutomata import Automaton
+from automataMethods import Automata
 
 app = Flask(__name__)
 CORS(app)
@@ -10,37 +13,31 @@ CORS(app)
 @app.route('/validate', methods=["GET"])
 def automataWord():
     args = request.args.get('word')
-    if (args == ""):
-        return jsonify({"word": "",
-                    "valid": True,
-                    "stepwise": []})
+    args.lower()
+    if args == "":
+        return jsonify({"stepwise": [], "valid": True, "word": args})
     else:
-        nonDeterministicFiniteAutomata = NFA(
-                                    states={'q0', 'q1', 'q2'},
-                                    input_symbols={'a', 'b', 'c'},
-                                    transitions={
-                                        'q0': {'a': {'q1'}, 'b': {'q2'}, 'c': {'q2'}},
-                                        'q1': {'a': {'q1'}},
-                                        'q2': {'b': {'q2'}, 'c': {'q2'}}
-                                    },
-                                    initial_state='q0',
-                                    final_states={'q0', 'q1', 'q2'}
-                                )   
-        
-        if nonDeterministicFiniteAutomata.accepts_input(args):
-            getElementsInStepwiseGenerator = list(nonDeterministicFiniteAutomata.read_input_stepwise(args))
-            routeElements = []
-            for element in range(len(args)+1):
-                routeElements.append(getElementsInStepwiseGenerator[element].pop())
+        if Automaton().isValid(args):
+            newAutomata = Automata(args)
+            newAutomata.stepwiseGenerator(newAutomata.nodeRoute())
+            roe = RootObjectElement(Stepwise().get(), True, args)
+            return jsonify(roe.get())
 
-            newAutomata = Automata(args, True)
-                
-            return jsonify(newAutomata.automataDesignProcess(routeElements)) 
         else:
-            return jsonify({"word": args,
-                    "valid": False,
-                    "stepwise": []})
-
+            if args[0] == 'a':
+                newArgs = re.split("[b-z]|[0-9]", args)
+                newAutomata = Automata(newArgs[0])
+                newAutomata.stepwiseGenerator(newAutomata.nodeRoute())
+                roe = RootObjectElement(Stepwise().get(), False, args)
+                return jsonify(roe.get())
+            elif args[0] == 'b' or args[0] == 'c':
+                newArgs = re.split("a|[d-z]|[0-9]", args)
+                newAutomata = Automata(newArgs[0])
+                newAutomata.stepwiseGenerator(newAutomata.nodeRoute())
+                roe = RootObjectElement(Stepwise().get(), False, args)
+                return jsonify(roe.get())
+            else:
+                return jsonify({"stepwise": [], "valid": False, "word": args})
 
 if __name__ == '__main__':
     app.run(debug=True, port=4000)
